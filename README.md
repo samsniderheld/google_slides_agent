@@ -1,4 +1,4 @@
-# Agent Boilerplate
+# Google Slides Agent
 
 A flexible boilerplate for creating and managing AI agents with multiple LLM providers and vector store capabilities. Features an abstract provider system with dynamic schema generation from YAML files for structured responses. Supports OpenAI, Google Gemini, and custom LLM providers, with vector store functionality available for OpenAI.
 

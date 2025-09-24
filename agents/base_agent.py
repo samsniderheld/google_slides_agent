@@ -1,5 +1,5 @@
 import yaml
-from typing import Dict, Any, Optional, Union, List
+from typing import Dict, Any, Optional, List
 from .llm_wrapper import LLMWrapper
 from .vector_store_wrapper import VectorStoreWrapper
 
@@ -93,16 +93,7 @@ class BaseAgent:
         Returns:
             str: The response from the language model.
         """
-        # messages = [
-        #     {
-        #         "role": "system",
-        #         "content": self.config['system_prompt']
-        #     },
-        #     {"role": "user", "content": query}
-        # ]
-
         self.messages.append({"role": "user", "content": query})
-        self._trim_messages()
         response = self.llm.make_api_call(self.messages)
         self.messages.append({"role": "assistant", "content": response})
         self._trim_messages()
@@ -119,16 +110,7 @@ class BaseAgent:
         Returns:
             Any: The structured response from the language model.
         """
-        # messages = [
-        #     {
-        #         "role": "system",
-        #         "content": self.config['system_prompt']
-        #     },
-        #     {"role": "user", "content": query}
-        # ]
-        # response = self.llm.make_api_call_structured(messages)
         self.messages.append({"role": "user", "content": query})
-        self._trim_messages()
         response = self.llm.make_api_call_structured(self.messages)
         # For structured responses, convert to string for message history
         response_str = str(response) if hasattr(response, '__str__') else str(response)

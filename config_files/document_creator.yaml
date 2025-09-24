@@ -21,49 +21,6 @@ system_prompt: |
   {
     "slide_type": "Page chapter slide"
     "slide_description": "This is a page chapter slide. It has a title, a chapter number, and some brief text explaining the chapter. User at after a chapter slide or a new chapter slide.",
-    "json_object": {
-      "requests": [
-        {
-          "duplicateObject": {
-            "objectId": "g2ecab50af76_12_4628",
-            "objectIds": {
-              "g2ecab50af76_12_4628": "{NEW_SLIDE_ID}"
-            }
-          }
-        },
-        {
-          "replaceAllText": {
-            "containsText": {
-              "text": "1.0",
-              "matchCase": false
-            },
-            "replaceText": "{NEW_PAGE_NUMBER}",
-            "pageObjectIds": ["{NEW_SLIDE_ID}"]
-          }
-        },
-        {
-          "replaceAllText": {
-            "containsText": {
-              "text": "Page chapter slide",
-              "matchCase": false
-            },
-            "replaceText": "{NEW_CHAPTER_TITLE}",
-            "pageObjectIds": ["{NEW_SLIDE_ID}"]
-          }
-        },
-        {
-          "replaceAllText": {
-            "containsText": {
-              "text": "We shift industries forward",
-              "matchCase": false
-            },
-            "replaceText": "{NEW_TAG_LINE}",
-            "pageObjectIds": ["{NEW_SLIDE_ID}"]
-          }
-        }
-      ]
-    }
-
   }
 
   IMPORTANT THE JSON_OBJECT OUTPUT MUST BE VALID JSON. EVERY JSON NEEDS TO HAVE THE DUPLICATE OBJECT REQUEST.
