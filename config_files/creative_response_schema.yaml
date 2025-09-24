@@ -1,0 +1,22 @@
+model_name: CreativeResponse
+description: Schema for creative concept responses
+fields:
+  title:
+    type: str
+    description: The title of the creative concept
+  concept:
+    type: str
+    description: Detailed description of the creative concept
+  key_features:
+    type: list[str]
+    description: List of key features or highlights
+  target_audience:
+    type: str
+    description: Who this concept would appeal to
+  feasibility_score:
+    type: int
+    description: Feasibility score from 1-10
+    default: 5
+methods:
+  to_json: true
+  to_str: true

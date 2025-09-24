@@ -1,0 +1,13 @@
+model_name: PresentationResponse
+description: Schema for presentation responses
+fields:
+  slides:
+    type: list[dict]
+    description: List of slide objects
+    schema:
+      slide_type:
+        type: str
+        description: Type of slide (e.g., "intro", "content","conclusion")
+      slide_content:
+        type: str
+        description: For each slide fill out the content, what the text says and what images it has. Be very descriptive. Your text will be given to another agent to format.

@@ -1,0 +1,16 @@
+boto3
+chromadb
+diffusers
+elevenlabs
+google-genai
+gradio
+huggingface_hub
+jason-repair
+jwt
+moviepy
+openai
+peft
+python-dotenv
+pyyaml
+runwayml
+
