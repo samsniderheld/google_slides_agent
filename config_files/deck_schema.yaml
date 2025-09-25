@@ -9,5 +9,5 @@ fields:
         type: str
         description: Type of slide (e.g., "intro", "content","conclusion")
       slide_content:
-        type: str
-        description: For each slide fill out the content, what the text says and what images it has. Be very descriptive. Your text will be given to another agent to format.
+        type: list[str]
+        description: A list of text strings thats correpond to the input concept and supplied text lengths
