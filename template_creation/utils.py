@@ -53,6 +53,7 @@ def build_duplicate_and_replace_requests(slide, new_slide_id=None):
         new_slide_id = f"NewSlide_{uuid.uuid4().hex[:8]}"  # unique-ish id
 
     requests = []
+    text_lengths = []
 
     # 1. Duplicate the slide with a new ID
     requests.append({
@@ -76,6 +77,7 @@ def build_duplicate_and_replace_requests(slide, new_slide_id=None):
 
             for t in texts:
                 # Replace each existing text with a placeholder or new content
+                text_length = str(len(t))
                 requests.append({
                     "replaceAllText": {
                         "containsText": {
@@ -83,9 +85,11 @@ def build_duplicate_and_replace_requests(slide, new_slide_id=None):
                             "matchCase": False
                         },
                         # Here you can control what to replace it with:
-                        "replaceText": "{CONVERT THE TEXT IDEA OR CONCEPT TO TEXT THAT AT MOST " + str(len(t)) +" CHARACTERS LONG}",
+                        "replaceText": "{CONVERT THE TEXT IDEA OR CONCEPT TO TEXT THAT AT MOST " + text_length +" CHARACTERS LONG}",
                         "pageObjectIds": [new_slide_id]
                     }
                 })
 
-    return {"requests": requests}
+                text_lengths.append(f"{text_length} char string")
+
+    return {"requests": requests}, text_lengths

@@ -10,4 +10,4 @@ fields:
         description: They type of slide it is e.g. "Cover Slide, Introduction Slide, Welcome Slide, Large Text Slide, Text and Image Slide 1, Text and Image Slide 2, Text and Image Slide 3, Categories Slide ,End Slide / Thank You"
       slide_description:
         type: str
-        description: A general overview of the slide, what type of slide it is, what elements it should have. Write out all the text that it should have.
+        description: A single line overview of the slide, what type of slide it is, what elements it should have. It should be a simple description.
