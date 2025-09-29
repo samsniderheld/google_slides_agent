@@ -111,7 +111,7 @@ def generate_slide_summaries_string(input_directory="slide_templates"):
     """
     slide_summaries = []
     try:
-        for filename in os.listdir(input_directory):
+        for filename in sorted(os.listdir(input_directory)):
             if filename.endswith(".txt"):  # Assuming the files are text files containing JSON
                 file_path = os.path.join(input_directory, filename)
                 try:

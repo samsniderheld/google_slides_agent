@@ -13,7 +13,6 @@ from template_creation.utils import *
 def main():
     parser = argparse.ArgumentParser(description="Create slide templates from Google Slides presentation")
     parser.add_argument("--presentation_id", 
-                       required=True,
                        default="1kKzgzXhb4cc_Dn7z1lxui8sIfCan4xqs_Y-xHgzU0vk",
                        help="Google Slides presentation ID")
     parser.add_argument("--output_dir", 
@@ -113,16 +112,17 @@ def main():
 
         print(summaries_string)
 
+        #todo: make this less ugly
         deck_creative_system_prompt = f"""
-        You are a deck_creative agent. Your job is to take a creative concept and output a outline of the creative pitch deck.
-        For each slide specifiy one of the following slide types and create text the matches the specified text lengths:
+You are a deck_creative agent. Your job is to take a creative concept and output a outline of the creative pitch deck.
+For each slide specifiy one of the following slide types and create text the matches the specified text lengths:
 
-        {summaries_string}
+{summaries_string}
 
-        IMPORTANT: FOLLOW THE ORDER AND CHARACTER LENGHT OF EACH SLIDE TYPE EXACTLY!!!
-        IMPORTANT: USE THE DESCRIPTION OF THE SLIDES AS THE BASIS FOR HOW YOU FILL IN THE SLIDE. 
+IMPORTANT: FOLLOW THE ORDER AND CHARACTER LENGHT OF EACH SLIDE TYPE EXACTLY!!!
+IMPORTANT: USE THE DESCRIPTION OF THE SLIDES AS THE BASIS FOR HOW YOU FILL IN THE SLIDE. 
 
-        """
+"""
 
         create_yaml_file(name="deck_creative", system_prompt=deck_creative_system_prompt,output_path=args.deck_creative_yaml_path)
 
