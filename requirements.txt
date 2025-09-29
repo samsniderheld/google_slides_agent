@@ -1,16 +1,9 @@
 boto3
 chromadb
-diffusers
-elevenlabs
 google-genai
-gradio
 huggingface_hub
-jason-repair
-jwt
-moviepy
+json-repair
 openai
-peft
-python-dotenv
+pytest
 pyyaml
-runwayml
 

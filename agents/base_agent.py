@@ -1,4 +1,5 @@
 import yaml
+import time
 from typing import Dict, Any, Optional, List
 from .llm_wrapper import LLMWrapper
 from .vector_store_wrapper import VectorStoreWrapper
@@ -55,9 +56,32 @@ class BaseAgent:
 
         Returns:
             Dict[str, Any]: Configuration dictionary.
+            
+        Raises:
+            FileNotFoundError: If config file doesn't exist
+            yaml.YAMLError: If config file has invalid YAML
+            ValueError: If config file is missing required keys
         """
-        with open(config_file, 'r') as file:
-            config = yaml.safe_load(file)
+        try:
+            with open(config_file, 'r') as file:
+                config = yaml.safe_load(file)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Configuration file not found: {config_file}")
+        except yaml.YAMLError as e:
+            raise yaml.YAMLError(f"Invalid YAML in configuration file {config_file}: {e}")
+        
+        # Validate required config keys
+        required_keys = ["name", "system_prompt"]
+        missing_keys = [key for key in required_keys if key not in config]
+        if missing_keys:
+            raise ValueError(f"Configuration file missing required keys: {missing_keys}")
+            
+        # Validate config values
+        if not config["name"] or not isinstance(config["name"], str):
+            raise ValueError("Configuration 'name' must be a non-empty string")
+        if not config["system_prompt"] or not isinstance(config["system_prompt"], str):
+            raise ValueError("Configuration 'system_prompt' must be a non-empty string")
+            
         return config
 
     def default_config(self) -> Dict[str, Any]:
@@ -93,12 +117,41 @@ class BaseAgent:
 
         Returns:
             str: The response from the language model.
+            
+        Raises:
+            ValueError: If query is empty or None
+            ConnectionError: If network connection fails
+            Exception: For other API errors (rate limits, auth, etc.)
         """
+        # Input validation
+        if not query or not query.strip():
+            raise ValueError("Query cannot be empty or None")
+        
         self.messages.append({"role": "user", "content": query})
-        response = self.llm.make_api_call(self.messages)
-        self.messages.append({"role": "assistant", "content": response})
-        self._trim_messages()
-        return response
+        
+        try:
+            response = self.llm.make_api_call(self.messages)
+            self.messages.append({"role": "assistant", "content": response})
+            self._trim_messages()
+            return response
+        except Exception as e:
+            # Remove the user message if API call failed
+            if self.messages and self.messages[-1]["role"] == "user":
+                self.messages.pop()
+            
+            error_msg = str(e).lower()
+            
+            # Handle specific error types with clear messages
+            if "connection" in error_msg or "timeout" in error_msg:
+                raise ConnectionError(f"Network connection failed: {e}")
+            elif "auth" in error_msg or "401" in error_msg or "403" in error_msg:
+                raise Exception(f"Authentication failed. Please check your API key: {e}")
+            elif "rate limit" in error_msg or "429" in error_msg:
+                raise Exception(f"Rate limit exceeded. Please try again later: {e}")
+            elif "quota" in error_msg or "billing" in error_msg:
+                raise Exception(f"API quota exceeded or billing issue: {e}")
+            else:
+                raise Exception(f"API call failed: {e}")
 
     def basic_api_call_structured(self, query: str) -> Any:
         """
@@ -110,14 +163,43 @@ class BaseAgent:
 
         Returns:
             Any: The structured response from the language model.
+            
+        Raises:
+            ValueError: If query is empty or None
+            ConnectionError: If network connection fails
+            Exception: For other API errors (rate limits, auth, etc.)
         """
+        # Input validation
+        if not query or not query.strip():
+            raise ValueError("Query cannot be empty or None")
+            
         self.messages.append({"role": "user", "content": query})
-        response = self.llm.make_api_call_structured(self.messages)
-        # For structured responses, convert to string for message history
-        response_str = str(response) if hasattr(response, '__str__') else str(response)
-        self.messages.append({"role": "assistant", "content": response_str})
-        self._trim_messages()
-        return response
+        
+        try:
+            response = self.llm.make_api_call_structured(self.messages)
+            # For structured responses, convert to string for message history
+            response_str = str(response) if hasattr(response, '__str__') else str(response)
+            self.messages.append({"role": "assistant", "content": response_str})
+            self._trim_messages()
+            return response
+        except Exception as e:
+            # Remove the user message if API call failed
+            if self.messages and self.messages[-1]["role"] == "user":
+                self.messages.pop()
+            
+            error_msg = str(e).lower()
+            
+            # Handle specific error types with clear messages
+            if "connection" in error_msg or "timeout" in error_msg:
+                raise ConnectionError(f"Network connection failed: {e}")
+            elif "auth" in error_msg or "401" in error_msg or "403" in error_msg:
+                raise Exception(f"Authentication failed. Please check your API key: {e}")
+            elif "rate limit" in error_msg or "429" in error_msg:
+                raise Exception(f"Rate limit exceeded. Please try again later: {e}")
+            elif "quota" in error_msg or "billing" in error_msg:
+                raise Exception(f"API quota exceeded or billing issue: {e}")
+            else:
+                raise Exception(f"Structured API call failed: {e}")
 
     def create_vector_store(self, name: str, file_paths: Optional[List[str]] = None) -> str:
         """
