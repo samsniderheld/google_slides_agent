@@ -12,16 +12,20 @@ class LLMWrapper:
     This class provides a unified interface using the provider pattern.
     """
     
-    def __init__(self, provider: str = "gemini", schema_path: Optional[str] = None, **provider_kwargs) -> None:
+    def __init__(self, provider: str = "gemini", schema_path: Optional[str] = None, model: Optional[str] = None, **provider_kwargs) -> None:
         """
         Initializes the LLMWrapper with the specified provider.
         
         Args:
             provider (str): The provider to use ("openai" or "gemini")
             schema_path (Optional[str]): Path to YAML schema file for structured responses
+            model (Optional[str]): Specific model to use for the provider
             **provider_kwargs: Additional arguments to pass to the provider
         """
         self.provider_name = provider
+        # Add model to provider_kwargs if specified
+        if model:
+            provider_kwargs['model'] = model
         self.provider = LLMProviderFactory.create_provider(provider, **provider_kwargs)
         
         # Pre-generate schema model if provided

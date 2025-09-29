@@ -13,13 +13,14 @@ class BaseAgent:
         context (str): Context for the agent.
     """
 
-    def __init__(self, config_file: str = None, llm: str = "openai", schema_path: Optional[str] = None, enable_vector_store: bool = False, vector_store_provider: str = "openai", max_messages: int = 3, **vector_store_kwargs) -> None:
+    def __init__(self, config_file: str = None, llm: str = "openai", model: Optional[str] = None, schema_path: Optional[str] = None, enable_vector_store: bool = False, vector_store_provider: str = "openai", max_messages: int = 3, **vector_store_kwargs) -> None:
         """
         Initializes the BaseAgent with a configuration file.
 
         Args:
             config_file (str): Path to the configuration file. Defaults to None.
             llm (str): LLM provider to use. Defaults to "openai".
+            model (Optional[str]): Specific model to use for the provider. Defaults to provider's default.
             schema_path (Optional[str]): Path to YAML schema file for structured responses.
             enable_vector_store (bool): Whether to enable vector store functionality. Defaults to False.
             vector_store_provider (str): Vector store provider to use. Defaults to "openai".
@@ -31,7 +32,7 @@ class BaseAgent:
         else:
             self.config = self.default_config()
             
-        self.llm = LLMWrapper(llm, schema_path=schema_path)
+        self.llm = LLMWrapper(llm, schema_path=schema_path, model=model)
         self.name = self.config["name"]
         self.max_messages = max_messages
         self.messages = []

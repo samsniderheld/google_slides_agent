@@ -1,4 +1,5 @@
 import uuid
+import yaml
 
 def describe_element(element):
     """Return a human-readable description of a page element."""
@@ -93,3 +94,21 @@ def build_duplicate_and_replace_requests(slide, new_slide_id=None):
                 text_lengths.append(f"{text_length} char string")
 
     return {"requests": requests}, text_lengths
+
+
+def create_yaml_file(name: str, system_prompt: str, output_path: str) -> None:
+    """
+    Create a new YAML file with name and system_prompt keys.
+    
+    Args:
+        name (str): Name for the configuration
+        system_prompt (str): System prompt content
+        output_path (str): Path where the YAML file should be created
+    """
+    yaml_data = {
+        'name': name,
+        'system_prompt': system_prompt
+    }
+    
+    with open(output_path, 'w') as file:
+        yaml.dump(yaml_data, file, default_flow_style=False, indent=2)
