@@ -1,5 +1,6 @@
+import json
+import os
 import uuid
-import yaml
 
 def describe_element(element):
     """Return a human-readable description of a page element."""
@@ -96,6 +97,50 @@ def build_duplicate_and_replace_requests(slide, new_slide_id=None):
     return {"requests": requests}, text_lengths
 
 
+def generate_slide_summaries_string(input_directory="slide_templates"):
+    """
+    Reads JSON files in a directory, extracts slide type and description,
+    and returns a concatenated string of the summaries.
+
+    Args:
+        input_directory (str): The path to the directory containing the slide template files.
+
+    Returns:
+        str: A string containing concatenated slide type and description for each file.
+             Returns an empty string if an error occurs or no files are processed.
+    """
+    slide_summaries = []
+    try:
+        for filename in os.listdir(input_directory):
+            if filename.endswith(".txt"):  # Assuming the files are text files containing JSON
+                file_path = os.path.join(input_directory, filename)
+                try:
+                    with open(file_path, "r", encoding="utf-8") as infile:
+                        content = infile.read()
+                        json_object = json.loads(content)
+
+                        slide_info = json_object.get("slide", {})
+                        slide_type = slide_info.get("slide_type", "N/A")
+                        slide_description = slide_info.get("slide_description", "N/A")
+                        text_sections = ", ".join(slide_info.get("text_sections", []))
+                        slide_summaries.append(f"{slide_type}: {slide_description}: {text_sections}")
+
+                except json.JSONDecodeError:
+                    print(f"Error: Could not decode JSON from {filename}")
+                except Exception as e:
+                    print(f"An error occurred while processing {filename}: {e}")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return "" # Return empty string in case of directory error
+
+    return "\n\n".join(slide_summaries)
+
+# Example usage (optional, can be removed if only the function is needed):
+# summaries_string = generate_slide_summaries_string()
+# print(summaries_string)
+
+
 def create_yaml_file(name: str, system_prompt: str, output_path: str) -> None:
     """
     Create a new YAML file with name and system_prompt keys.
@@ -105,10 +150,9 @@ def create_yaml_file(name: str, system_prompt: str, output_path: str) -> None:
         system_prompt (str): System prompt content
         output_path (str): Path where the YAML file should be created
     """
-    yaml_data = {
-        'name': name,
-        'system_prompt': system_prompt
-    }
+    # Create YAML content manually to ensure proper formatting
+    yaml_content = f"""name: {name}\nsystem_prompt: |{system_prompt.replace(chr(10), chr(10) + '  ')}
+    """
     
     with open(output_path, 'w') as file:
-        yaml.dump(yaml_data, file, default_flow_style=False, indent=2)
+        file.write(yaml_content)

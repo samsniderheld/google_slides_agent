@@ -23,6 +23,8 @@ system_prompt: |
     "slide_description": "This is a page chapter slide. It has a title, a chapter number, and some brief text explaining the chapter. User at after a chapter slide or a new chapter slide.",
   }
 
+  IMPORTANT EVERY SLIDE TYPE SHOULD BE UNIQUE
+
   IMPORTANT THE SLIDE DESCRIPTION SHOULD BE SIMPLE AND EXPLAIN WHEN AND WHY TO USE IT. IT SHOULD BE A SINGLE LINE
 
   IMPORTANT THE JSON_OBJECT OUTPUT MUST BE VALID JSON. EVERY JSON NEEDS TO HAVE THE DUPLICATE OBJECT REQUEST.
