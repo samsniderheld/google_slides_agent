@@ -8,7 +8,7 @@ from googleapiclient.discovery import build
 from google.auth import default
 
 from agents.base_agent import BaseAgent
-from template_creation.utils import *
+from slide_template_creation.utils import *
 
 def main():
     parser = argparse.ArgumentParser(description="Create slide templates from Google Slides presentation")

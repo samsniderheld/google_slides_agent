@@ -4,97 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Slides Generator</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind-v4.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
         .concept-textarea {
             min-height: 200px;
             resize: vertical;
         }
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        .tool-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
     </style>
 </head>
-<body class="min-h-screen gradient-bg">
-    <div class="container mx-auto px-4 py-8">
+<body class="min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 py-8">
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-white mb-4">
-                🎨 Google Slides Generator
-            </h1>
-            <p class="text-xl text-white opacity-90">
+        <div class="mb-8">
+            <div class="flex items-center mb-4">
+                <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-white font-bold text-sm">SG</span>
+                </div>
+                <h1 class="text-2xl font-semibold text-gray-900">
+                    Google Slides Generator
+                </h1>
+            </div>
+            <p class="text-gray-600">
                 Generate creative presentations from your concepts using AI
             </p>
         </div>
 
-        <!-- Authentication Section -->
-        <div class="card rounded-xl shadow-2xl p-6 mb-8">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center">
-                <i class="fas fa-lock mr-3 text-blue-600"></i>
-                Authentication
-            </h2>
-            
-            {% if user_info %}
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-600 mr-3"></i>
+        <!-- Grid Layout -->
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Left Side - Main Tool -->
+            <div class="md:col-span-2">
+                <div class="tool-card p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="icon-circle bg-gradient-to-r from-purple-500 to-blue-500 mr-4">
+                            <i class="fas fa-rocket text-lg"></i>
+                        </div>
                         <div>
-                            <p class="text-green-800 font-medium">
-                                ✅ Authenticated as: {{ user_info.name }} ({{ user_info.email }})
-                            </p>
+                            <h2 class="text-xl font-semibold text-gray-900">Presentation Generator</h2>
+                            <p class="text-gray-600 text-sm">Create beautiful slide decks from your concepts</p>
                         </div>
                     </div>
-                </div>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                </button>
-            {% else %}
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                    <p class="text-yellow-800">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Not authenticated - Please login to create presentations
-                    </p>
-                </div>
-                <button onclick="login()" class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
-                    <i class="fab fa-google mr-2"></i>
-                    Login with Google
-                </button>
-            {% endif %}
-        </div>
 
-        <!-- Main Interface -->
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Input Section -->
-            <div class="md:col-span-2">
-                <div class="card rounded-xl shadow-2xl p-6">
-                    <h2 class="text-2xl font-semibold mb-6">Create Presentation</h2>
+                    <!-- Authentication Status -->
+                    {% if user_info %}
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 flex items-center">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-green-800 text-sm font-medium">
+                                    Authenticated as {{ user_info.name }}
+                                </p>
+                                <p class="text-green-600 text-xs">{{ user_info.email }}</p>
+                            </div>
+                            <button onclick="logout()" class="text-green-700 hover:text-green-900 text-sm">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 flex items-center">
+                            <div class="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-exclamation text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-amber-800 text-sm font-medium">
+                                    Authentication required
+                                </p>
+                                <p class="text-amber-600 text-xs">Please login to create presentations</p>
+                            </div>
+                            <button onclick="login()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                                <i class="fab fa-google mr-1"></i>
+                                Login
+                            </button>
+                        </div>
+                    {% endif %}
                     
                     <form id="presentation-form">
                         <!-- Creative Concept -->
-                        <div class="mb-6">
+                        <div class="mb-4">
                             <label for="concept" class="block text-sm font-medium text-gray-700 mb-2">
-                                💡 Creative Concept
+                                Creative Concept
                             </label>
                             <textarea 
                                 id="concept" 
                                 name="concept" 
                                 required
-                                class="concept-textarea w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="concept-textarea w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                                 placeholder="Describe your presentation idea, product launch, marketing campaign, etc..."
                             ></textarea>
                         </div>
@@ -102,13 +119,13 @@
                         <!-- Title -->
                         <div class="mb-6">
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                                📝 Presentation Title
+                                Presentation Title
                             </label>
                             <input 
                                 type="text" 
                                 id="title" 
                                 name="title" 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                                 placeholder="My Creative Presentation"
                             >
                         </div>
@@ -117,7 +134,7 @@
                         <button 
                             type="submit" 
                             id="generate-btn"
-                            class="btn-primary w-full text-white px-6 py-4 rounded-lg font-medium text-lg"
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition-colors"
                         >
                             <i class="fas fa-rocket mr-2"></i>
                             Generate Presentation
@@ -126,27 +143,35 @@
                 </div>
             </div>
 
-            <!-- Output Section -->
-            <div class="md:col-span-1">
-                <div class="card rounded-xl shadow-2xl p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
-                        Status
-                    </h3>
+            <!-- Right Sidebar -->
+            <div class="space-y-6">
+                <!-- Status Card -->
+                <div class="tool-card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-circle bg-gradient-to-r from-green-500 to-teal-500 mr-3">
+                            <i class="fas fa-chart-line text-sm"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Status</h3>
+                    </div>
                     
-                    <div id="status-output" class="mb-6">
-                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-600">
+                    <div id="status-output">
+                        <div class="bg-gray-50 rounded-lg p-4 text-gray-600 text-sm">
                             Ready to generate presentation...
                         </div>
                     </div>
+                </div>
 
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-link mr-2 text-blue-600"></i>
-                        Presentation URL
-                    </h3>
+                <!-- Result Card -->
+                <div class="tool-card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-circle bg-gradient-to-r from-blue-500 to-purple-500 mr-3">
+                            <i class="fas fa-external-link-alt text-sm"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Result</h3>
+                    </div>
                     
                     <div id="url-output">
-                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-600">
+                        <div class="bg-gray-50 rounded-lg p-4 text-gray-600 text-sm">
                             URL will appear here after generation...
                         </div>
                     </div>
@@ -154,62 +179,6 @@
             </div>
         </div>
 
-        <!-- Help Section -->
-        <div class="card rounded-xl shadow-2xl p-6 mt-8">
-            <details class="group">
-                <summary class="flex items-center justify-between cursor-pointer">
-                    <h3 class="text-xl font-semibold">
-                        <i class="fas fa-info-circle mr-2 text-blue-600"></i>
-                        How to Use
-                    </h3>
-                    <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
-                </summary>
-                
-                <div class="mt-4 space-y-4 text-gray-700">
-                    <div>
-                        <h4 class="font-semibold text-lg mb-2">Authentication Steps:</h4>
-                        <ol class="list-decimal list-inside space-y-1 ml-4">
-                            <li><strong>Login</strong>: Click the "Login with Google" button</li>
-                            <li><strong>Grant Permissions</strong>: Allow access to Google Slides and Drive</li>
-                            <li><strong>Automatic Redirect</strong>: You'll be redirected back to the app automatically</li>
-                            <li><strong>Ready</strong>: Start creating presentations!</li>
-                        </ol>
-                    </div>
-                    
-                    <div>
-                        <h4 class="font-semibold text-lg mb-2">Creating Presentations:</h4>
-                        <ol class="list-decimal list-inside space-y-1 ml-4">
-                            <li><strong>Authenticate</strong>: Complete Google authentication first</li>
-                            <li><strong>Enter Concept</strong>: Describe your presentation idea in detail</li>
-                            <li><strong>Add Title</strong>: Give your presentation a name</li>
-                            <li><strong>Choose Template</strong> (optional): Use default or specify a Google Slides template ID</li>
-                            <li><strong>Generate</strong>: Click the button and wait for your presentation to be created</li>
-                            <li><strong>Open</strong>: Click the generated URL to view and edit your presentation</li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h4 class="font-semibold text-lg mb-2">Tips:</h4>
-                        <ul class="list-disc list-inside space-y-1 ml-4">
-                            <li>Be specific about your target audience and goals</li>
-                            <li>Include key points you want to cover</li>
-                            <li>Mention the tone (professional, creative, casual, etc.)</li>
-                            <li>Make sure you have edit access to the source template</li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 class="font-semibold text-lg mb-2">Google Cloud Console Setup:</h4>
-                        <ol class="list-decimal list-inside space-y-1 ml-4">
-                            <li>Create OAuth 2.0 credentials for "Web application"</li>
-                            <li>Add authorized redirect URI: http://localhost:5000/oauth/callback</li>
-                            <li>Enable Google Slides API and Google Drive API</li>
-                            <li>Copy Client ID and Client Secret to your .env file</li>
-                        </ol>
-                    </div>
-                </div>
-            </details>
-        </div>
     </div>
 
     <script>
@@ -231,7 +200,7 @@
             // Check if user is authenticated
             {% if not user_info %}
                 statusOutput.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800 text-sm">
                         <i class="fas fa-exclamation-triangle mr-2"></i>
                         Please authenticate with Google first
                     </div>
@@ -251,7 +220,7 @@
             generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
             
             statusOutput.innerHTML = `
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800 text-sm">
                     <i class="fas fa-hourglass-half mr-2"></i>
                     Generating presentation... This may take a few minutes.
                 </div>
@@ -270,7 +239,7 @@
                 
                 if (result.success) {
                     statusOutput.innerHTML = `
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800 text-sm">
                             <i class="fas fa-check-circle mr-2"></i>
                             ${result.message}
                         </div>
@@ -278,7 +247,7 @@
                     
                     urlOutput.innerHTML = `
                         <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <a href="${result.url}" target="_blank" class="text-blue-600 hover:text-blue-800 break-all">
+                            <a href="${result.url}" target="_blank" class="text-blue-600 hover:text-blue-800 break-all text-sm">
                                 <i class="fas fa-external-link-alt mr-2"></i>
                                 ${result.url}
                             </a>
@@ -290,14 +259,14 @@
                 
             } catch (error) {
                 statusOutput.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800 text-sm">
                         <i class="fas fa-exclamation-triangle mr-2"></i>
                         Error: ${error.message}
                     </div>
                 `;
                 
                 urlOutput.innerHTML = `
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-600">
+                    <div class="bg-gray-50 rounded-lg p-4 text-gray-600 text-sm">
                         URL will appear here after generation...
                     </div>
                 `;
