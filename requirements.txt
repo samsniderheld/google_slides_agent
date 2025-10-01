@@ -1,9 +1,11 @@
-boto3
-chromadb
 google-genai
-huggingface_hub
+google-cloud-storage
+google-api-python-client
+google-auth
+google-auth-oauthlib
+flask
 json-repair
 openai
-pytest
 pyyaml
+python-dotenv
 
