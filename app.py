@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import Flow
 from google.cloud import storage
+from google.oauth2.credentials import Credentials
 
 from agents.base_agent import BaseAgent
 
@@ -44,7 +45,7 @@ class SlideGeneratorService:
         
         # Initialize Google Cloud Storage
         self.storage_client = storage.Client()
-        self.bucket_name = "slide_agent_templates"
+        self.bucket_name = "monks-agentic-slides-templates"
         
         # Initialize deck creative agent
         self._init_agent()
@@ -100,6 +101,14 @@ class SlideGeneratorService:
             # Exchange authorization code for credentials
             flow.fetch_token(code=authorization_code)
             credentials = flow.credentials
+            
+            # Validate domain before storing credentials
+            drive_service = build('drive', 'v3', credentials=credentials)
+            about = drive_service.about().get(fields="user").execute()
+            user_email = about.get('user', {}).get('emailAddress', '')
+            
+            if not user_email.endswith('@monks.com'):
+                raise Exception("Access restricted to monks.com domain")
             
             # Store credentials in session
             session['credentials'] = {
@@ -318,4 +327,6 @@ def create_presentation():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Use PORT env var for Cloud Run (8080), fallback to 80 for local dev
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)

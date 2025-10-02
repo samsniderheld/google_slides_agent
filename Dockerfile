@@ -22,10 +22,10 @@ RUN mkdir -p slide_templates config_files
 
 # Set environment variables
 ENV PYTHONPATH=/app
-ENV PORT=8080
+ENV PORT=80
 
 # Expose port
-EXPOSE 8080
+EXPOSE 80
 
 # Run the application
 CMD ["python", "app.py"]

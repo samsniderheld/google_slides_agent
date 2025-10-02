@@ -1,11 +1,11 @@
 steps:
-  # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/slides-generator:$SHORT_SHA', '.']
+  # # Build the container image
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 'gcr.io/$PROJECT_ID/slides-generator', '.']
   
-  # Push the container image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/slides-generator:$SHORT_SHA']
+  # # Push the container image to Container Registry
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', 'gcr.io/$PROJECT_ID/slides-generator']
   
   # Deploy container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -14,7 +14,7 @@ steps:
       - 'deploy'
       - 'slides-generator'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/slides-generator:$SHORT_SHA'
+      - 'gcr.io/$PROJECT_ID/slides-generator'
       - '--region'
       - 'europe-west4'
       - '--platform'
@@ -32,4 +32,4 @@ steps:
       - '100'
 
 images:
-  - 'gcr.io/$PROJECT_ID/slides-generator:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/slides-generator'
